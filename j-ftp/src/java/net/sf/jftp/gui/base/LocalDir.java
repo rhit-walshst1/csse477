@@ -1103,6 +1103,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         if(con instanceof FilesystemConnection &&
                JFtp.remoteDir.getCon() instanceof FtpConnection)
         {
+        	// local: file system, remote: ftp
             if((entry.getRawSize() < Settings.smallSizeUp) &&
                    !entry.isDirectory())
             {
@@ -1132,12 +1133,14 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         else if(con instanceof FtpConnection &&
                     JFtp.remoteDir.getCon() instanceof FilesystemConnection)
         {
+        	// local: ftp, remote: file system
             con.setLocalPath(JFtp.remoteDir.getPath());
             con.handleDownload(path + entry.file);
         }
         else if(con instanceof FilesystemConnection &&
                     JFtp.remoteDir.getCon() instanceof FilesystemConnection)
         {
+        	// local: file system, remote: file system
             con.upload(entry.file);
             JFtp.remoteDir.actionPerformed(con, "FRESH");
         }
@@ -1149,6 +1152,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         }
         else
         {
+        	// local: smb, sftp, nfs, remote: file, ftp, smb, sftp, nfs
             if(entry.isDirectory())
             {
                 Log.debug("Directory transfer between remote connections is not supported yet!");

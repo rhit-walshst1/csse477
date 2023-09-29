@@ -20,6 +20,7 @@ import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.gui.hostchooser.HostChooser;
 import net.sf.jftp.gui.hostchooser.NfsHostChooser;
+import net.sf.jftp.gui.hostchooser.ScpHostChooser;
 import net.sf.jftp.gui.hostchooser.SftpHostChooser;
 import net.sf.jftp.gui.hostchooser.SmbHostChooser;
 import net.sf.jftp.gui.hostchooser.WebdavHostChooser;
@@ -88,6 +89,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JMenuItem localNfsCon = new JMenuItem("Open NFS Connection in Local Tab...");
     JMenuItem localWebdavCon = new JMenuItem("Open WebDAV Connection in Local Tab... (ALPHA)");
     JMenuItem closeLocalCon = new JMenuItem("Close Active Connection in Local Tab");
+    JMenuItem secureCon = new JMenuItem("Use SCP...");
     JMenuItem ftpCon = new JMenuItem("Connect to FTP Server...");
     JMenuItem sftpCon = new JMenuItem("Connect to SFTP Server...");
     JMenuItem smbCon = new JMenuItem("Connect to SMB Server / Browse LAN...");
@@ -161,7 +163,8 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     public AppMenuBar(JFtp jftp)
     {
         this.jftp = jftp;
-
+        
+        secureCon.addActionListener(this);
         ftpCon.addActionListener(this);
         close.addActionListener(this);
         exit.addActionListener(this);
@@ -442,6 +445,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     {
         file.removeAll();
 
+        file.add(secureCon);
         file.add(ftpCon);
         file.add(sftpCon);
         file.add(smbCon);
@@ -691,6 +695,12 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            con.addConnectionListener((ConnectionListener)jftp.remoteDir);
 	            if(!con.chdir("/")) con.chdir("C:\\");
 	            */
+	        }
+	        else if ((e.getSource() == secureCon) && (!jftp.uiBlocked)) {
+	        	ScpHostChooser hc = new ScpHostChooser();
+	        	hc.toFront();
+	        	
+	        	hc.update();
 	        }
 	        else if((e.getSource() == ftpCon) && (!jftp.uiBlocked))
 	        {
