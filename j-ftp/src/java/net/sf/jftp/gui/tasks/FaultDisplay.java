@@ -38,10 +38,36 @@ public class FaultDisplay extends JInternalFrame implements ActionListener
     {
         super("Error Display", true, true, true, true);
         setLocation(50, 50);
-        setSize(600, 540);
+        setSize(150, 135);
         getContentPane().setLayout(new BorderLayout());
 
         load(err);
+
+        JScrollPane jsp = new JScrollPane(info);
+        getContentPane().add("Center", jsp);
+
+        HPanel closeP = new HPanel();
+        closeP.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        closeP.add(acknowledge);
+
+        acknowledge.addActionListener(this);
+
+        getContentPane().add("South", closeP);
+
+        info.setCaretPosition(0);
+        pack();
+        setVisible(true);
+    }
+    
+    public FaultDisplay()
+    {
+        super("Error Display", true, true, true, true);
+        setLocation(50, 50);
+        setSize(150, 135);
+        getContentPane().setLayout(new BorderLayout());
+
+        load("An Error has occurred.\nCheck the Log for more details");
 
         JScrollPane jsp = new JScrollPane(info);
         getContentPane().add("Center", jsp);
