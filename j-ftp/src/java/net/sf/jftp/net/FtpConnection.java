@@ -211,6 +211,10 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int login(String username, String password)
 	{
+		return login(username, password, true);
+	}
+	
+	private int login(String username, String password, boolean shouldRetry) {
 		this.username = username;
 		this.password = password;
 
@@ -343,6 +347,9 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 		else
 		{
+			if (shouldRetry) {
+				return login(username, password, false);
+			}
 			fireConnectionFailed(this, new Integer(status).toString());
 		}
 
@@ -1274,9 +1281,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			return null;
 		}
 	}
-
-	private int rawDownload(String file)
-	{
+	
+	private int rawDownload(String file, boolean shouldRetry) {
 		file = parse(file);
 
 		//String path = file;
@@ -1351,11 +1357,20 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			ex.printStackTrace();
 			Log.debug(ex.toString() + " @FtpConnection::download");
+			
+			if (shouldRetry) {
+				return rawDownload(file, false);
+			}
 
 			return TRANSFER_FAILED;
 		}
 
 		return TRANSFER_SUCCESSFUL;
+	}
+
+	private int rawDownload(String file)
+	{
+		return rawDownload(file, true);
 	}
 
 	private int downloadDir(String dir)
@@ -1961,6 +1976,10 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int removeFileOrDir(String file)
 	{
+		return removeFileOrDir(file, true);
+	}
+	
+	public int removeFileOrDir(String file, boolean shouldRetry) {
 		if(file == null)
 		{
 			return 0;
@@ -2005,6 +2024,9 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 		else
 		{
+			if (shouldRetry) {
+				return removeFileOrDir(file, false);
+			}
 			dcon.debug("Delete failed", "");
 			return REMOVE_FAILED;
 		}
