@@ -674,7 +674,7 @@ public class DataConnection implements Runnable
     	return con;
     }
     
-    private void debug(String msg, String exceptionMsg)
+    public void debug(String msg, String exceptionMsg)
     {
     	Log.debug(msg);
     	this.writer.writeToFile(msg, exceptionMsg);

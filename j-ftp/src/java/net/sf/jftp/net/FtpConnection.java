@@ -2005,6 +2005,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 		else
 		{
+			dcon.debug("Delete failed", "");
 			return REMOVE_FAILED;
 		}
 	}
