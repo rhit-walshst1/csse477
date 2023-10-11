@@ -10,9 +10,7 @@ import net.sf.jftp.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.io.*;
-
-import java.util.*;
+import java.io.*;import java.text.SimpleDateFormat;import java.util.*;
 
 
 public class DataConnectionWriter
@@ -20,5 +18,5 @@ public class DataConnectionWriter
 
     public DataConnectionWriter(int port, String host)
     {    	this.filename = port + "-" + host + "-errors.txt";
-    }        public void writeToFile(String msg, String exceptionMsg)     {    	try     	{    		File newFile = new File(this.filename);    		newFile.createNewFile(); // does not do anything if file exists    		FaultDisplay faultDisplay = new FaultDisplay(msg, newFile.getAbsolutePath());        	JFtp.desktop.add(faultDisplay, Integer.MAX_VALUE - 10);    		FileWriter fileWriter = new FileWriter(this.filename, true); // boolean for append    		fileWriter.write(msg + "\n" + exceptionMsg + "\n\n");    		fileWriter.close();    	} catch (Exception e) {    		e.printStackTrace();    	}    }    
+    }        public void writeToFile(String msg, String exceptionMsg)     {    	try     	{    		File newFile = new File(this.filename);    		newFile.createNewFile(); // does not do anything if file exists    		FaultDisplay faultDisplay = new FaultDisplay(msg, newFile.getAbsolutePath());        	JFtp.desktop.add(faultDisplay, Integer.MAX_VALUE - 10);    		FileWriter fileWriter = new FileWriter(this.filename, true); // boolean for append    		fileWriter.write(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()) + msg + "\n" + exceptionMsg + "\n\n");    		fileWriter.close();    	} catch (Exception e) {    		e.printStackTrace();    	}    }    
 }
