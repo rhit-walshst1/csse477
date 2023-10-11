@@ -34,40 +34,14 @@ public class FaultDisplay extends JInternalFrame implements ActionListener
     private JTextArea info = new JTextArea(25, 50);
     private JButton acknowledge = new JButton("OK");
 
-    public FaultDisplay(String err)
+    public FaultDisplay(String err, String filePath)
     {
         super("Error Display", true, true, true, true);
         setLocation(50, 50);
         setSize(150, 135);
         getContentPane().setLayout(new BorderLayout());
 
-        load(err);
-
-        JScrollPane jsp = new JScrollPane(info);
-        getContentPane().add("Center", jsp);
-
-        HPanel closeP = new HPanel();
-        closeP.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        closeP.add(acknowledge);
-
-        acknowledge.addActionListener(this);
-
-        getContentPane().add("South", closeP);
-
-        info.setCaretPosition(0);
-        pack();
-        setVisible(true);
-    }
-    
-    public FaultDisplay()
-    {
-        super("Error Display", true, true, true, true);
-        setLocation(50, 50);
-        setSize(150, 135);
-        getContentPane().setLayout(new BorderLayout());
-
-        load("An Error has occurred.\nCheck the Log for more details");
+        load(err, filePath);
 
         JScrollPane jsp = new JScrollPane(info);
         getContentPane().add("Center", jsp);
@@ -91,9 +65,9 @@ public class FaultDisplay extends JInternalFrame implements ActionListener
     	this.dispose();
     }
     
-    private void load(String err)
+    private void load(String err, String filePath)
     {
-        info.setText(err);
+        info.setText(err + "\n" + "Please refer to .txt file located in: " + filePath);
     }
 
     public Insets getInsets()
