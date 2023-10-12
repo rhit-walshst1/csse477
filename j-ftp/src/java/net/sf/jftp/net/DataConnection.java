@@ -26,7 +26,10 @@ import java.io.StreamTokenizer;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
+import net.sf.jftp.gui.tasks.BookmarkManager;
+import net.sf.jftp.gui.tasks.FaultDisplay;
 import net.sf.jftp.system.logging.Log;
 
 
@@ -668,6 +671,8 @@ public class DataConnection implements Runnable
     
     private void debug(String msg)
     {
+    	FaultDisplay fd = new FaultDisplay(msg);
+        JFtp.desktop.add(fd, new Integer(Integer.MAX_VALUE - 10));
     	Log.debug(msg);
     }
     
