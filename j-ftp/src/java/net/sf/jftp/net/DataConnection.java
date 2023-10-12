@@ -679,7 +679,7 @@ public class DataConnection implements Runnable
     
     public void debug(String msg, String exceptionMsg)
     {
-    	FaultDisplay fd = new FaultDisplay(msg);
+    	FaultDisplay fd = new FaultDisplay(msg, DataConnectionWriter.createFilepath(port, host));
         JFtp.desktop.add(fd, new Integer(Integer.MAX_VALUE - 10));
     	Log.debug(msg);
     	this.writer.writeToFile(msg, exceptionMsg);
