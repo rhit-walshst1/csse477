@@ -738,7 +738,7 @@ public class DataConnection implements Runnable
             }
             catch(InterruptedException ex)
             {
-                ex.printStackTrace();
+                debug("Failed to interrupt", ex.toString());
             }
         }
     }
