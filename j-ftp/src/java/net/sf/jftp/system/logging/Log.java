@@ -15,6 +15,8 @@
  */
 package net.sf.jftp.system.logging;
 
+import java.text.SimpleDateFormat;
+
 import net.sf.jftp.config.Settings;
 
 
@@ -41,10 +43,10 @@ public class Log
         }
 
         //System.out.println(msg);
-        logger.debug(msg);
-        cache.append(msg + "\n");
+        logger.debug(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()) + msg);
+        cache.append(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()) + msg + "\n");
 
-        if(!Settings.getEnableDebug()) System.out.println("> " + msg);
+        if(!Settings.getEnableDebug()) System.out.println("> " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()) + msg);
     }
 
     public static void debugRaw(String msg)

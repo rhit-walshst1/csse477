@@ -31,6 +31,7 @@ import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.tasks.BookmarkManager;
 import net.sf.jftp.gui.tasks.FaultDisplay;
 import net.sf.jftp.system.logging.Log;
+import net.sf.jftp.util.DataConnectionWriter;
 
 
 /**
@@ -68,6 +69,7 @@ public class DataConnection implements Runnable
     //private String outputCharset = "CP037";
     private String newLine = null;
     private String LINEEND = System.getProperty("line.separator");
+    private DataConnectionWriter writer = null;
 
     public DataConnection(FtpConnection con, int port, String host,
                           String file, String type)
@@ -77,6 +79,7 @@ public class DataConnection implements Runnable
         this.host = host;
         this.port = port;
         this.type = type;
+        this.writer = new DataConnectionWriter(port, host);
         reciever = new Thread(this);
         reciever.start();
     }
@@ -90,6 +93,7 @@ public class DataConnection implements Runnable
         this.port = port;
         this.type = type;
         this.resume = resume;
+        this.writer = new DataConnectionWriter(port, host);
 
         //resume = false;
         reciever = new Thread(this);
@@ -107,6 +111,7 @@ public class DataConnection implements Runnable
         this.type = type;
         this.resume = resume;
         this.justStream = justStream;
+        this.writer = new DataConnectionWriter(port, host);
 
         //resume = false;
         reciever = new Thread(this);
@@ -124,6 +129,7 @@ public class DataConnection implements Runnable
         this.type = type;
         this.resume = resume;
         this.localfile = localfile;
+        this.writer = new DataConnectionWriter(port, host);
 
         //resume = false;
         reciever = new Thread(this);
@@ -140,6 +146,7 @@ public class DataConnection implements Runnable
         this.type = type;
         this.resume = resume;
         this.skiplen = skiplen;
+        this.writer = new DataConnectionWriter(port, host);
 
         //resume = false;
         reciever = new Thread(this);
@@ -157,6 +164,7 @@ public class DataConnection implements Runnable
         this.type = type;
         this.resume = resume;
         this.skiplen = skiplen;
+        this.writer = new DataConnectionWriter(port, host);
 
         if(i != null)
         {
@@ -186,7 +194,7 @@ public class DataConnection implements Runnable
                 {
                     ok = false;
                     ex.printStackTrace();
-                    debug("Can't open Socket on "+host+":" + port);
+                    debug("Can't open Socket on "+host+":" + port, ex.toString());
                 }
             }
             else
@@ -200,13 +208,13 @@ public class DataConnection implements Runnable
                 {
                     ok = false;
                     ex.printStackTrace();
-                    Log.debug("Can't open ServerSocket on port " + port);
+                    debug("Can't open ServerSocket on port " + port, ex.toString());
                 }
             }
         }
         catch(Exception ex)
         {
-            debug(ex.toString());
+            debug("An error occurred when getting trying to setup connection.", ex.toString());
         }
 
         isThere = true;
@@ -233,11 +241,11 @@ public class DataConnection implements Runnable
                     catch(IOException e)
                     {
                         sock = null;
-                        debug("Got IOException while trying to open a socket!");
+                        debug("Got IOException while trying to open a socket!", e.toString());
 
                         if(retry == 5)
                         {
-                            debug("Connection failed, tried 5 times - maybe try a higher timeout in Settings.java...");
+                            debug("Connection failed, tried 5 times - maybe try a higher timeout in Settings.java...", e.toString());
                         }
 
         		finished = true;
@@ -249,7 +257,7 @@ public class DataConnection implements Runnable
                         ssock.close();
                     }
 
-                    debug("Attempt timed out, retrying...");
+                    debug("Attempt timed out, retrying...", "");
                 }
             }
 
@@ -297,7 +305,7 @@ public class DataConnection implements Runnable
                         }
                         catch(Exception ex)
                         {
-                            debug("Can't create outputfile: " + file);
+                            debug("Can't create outputfile: " + file, ex.toString());
                             ok = false;
                             ex.printStackTrace();
                         }
@@ -318,7 +326,7 @@ public class DataConnection implements Runnable
                         catch(Exception ex)
                         {
                         	ok = false;
-                        	debug("Can't get InputStream");
+                        	debug("Can't get InputStream", ex.toString());
                         }
                         
                         if(ok)
@@ -452,7 +460,7 @@ public class DataConnection implements Runnable
                         	catch(IOException ex)
                         	{
                         		ok = false;
-                        		debug("Old connection removed");
+                        		debug("Old connection removed", ex.toString());
                         		con.fireProgressUpdate(file, FAILED, -1);
                         		
                         		//debug(ex + ": " + ex.getMessage());
@@ -480,7 +488,7 @@ public class DataConnection implements Runnable
                 		}
                 		catch(Exception ex)
                 		{
-                			debug("Can't open inputfile: " + " (" + ex + ")");
+                			debug("Can't open inputfile", ex.toString());
                 			ok = false;
                 		}
                 	}
@@ -494,7 +502,7 @@ public class DataConnection implements Runnable
                 		catch(Exception ex)
                 		{
                 			ok = false;
-                			debug("Can't get OutputStream");
+                			debug("Can't get OutputStream", ex.toString());
                 		}
                 		
                 		if(ok)
@@ -554,7 +562,7 @@ public class DataConnection implements Runnable
                 			catch(IOException ex)
                 			{
                 				ok = false;
-                				debug("Error: Data connection closed.");
+                				debug("Error: Data connection closed.", ex.toString());
                 				con.fireProgressUpdate(file, FAILED, -1);
                 				ex.printStackTrace();
                 			}
@@ -565,7 +573,7 @@ public class DataConnection implements Runnable
         }
         catch(IOException ex)
         {
-        	Log.debug("Can't connect socket to ServerSocket");
+        	debug("Can't connect socket to ServerSocket", ex.toString());
         	ex.printStackTrace();
         }
         finally
@@ -632,7 +640,7 @@ public class DataConnection implements Runnable
         }
         catch(Exception ex)
         {
-        	debug(ex.toString());
+        	debug("Failed to close socket", ex.toString());
         }
         
         if(!Settings.getFtpPasvMode())
@@ -643,7 +651,7 @@ public class DataConnection implements Runnable
         	}
         	catch(Exception ex)
         	{
-        		debug(ex.toString());
+        		debug("Failed to close socket", ex.toString());
         	}
         }
         
@@ -669,11 +677,12 @@ public class DataConnection implements Runnable
     	return con;
     }
     
-    private void debug(String msg)
+    public void debug(String msg, String exceptionMsg)
     {
     	FaultDisplay fd = new FaultDisplay(msg);
         JFtp.desktop.add(fd, new Integer(Integer.MAX_VALUE - 10));
     	Log.debug(msg);
+    	this.writer.writeToFile(msg, exceptionMsg);
     }
     
     public void reset()
