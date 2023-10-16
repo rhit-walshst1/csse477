@@ -46,7 +46,7 @@ public class AutoRemover
         {
             JFtp.remoteDir.lock(false);
 
-            JFtp.remoteDir.getCon().removeFileOrDir(file);
+			JFtp.remoteDir.getCon().removeFileOrDir(file);
 
             JFtp.remoteDir.unlock(false);
         }

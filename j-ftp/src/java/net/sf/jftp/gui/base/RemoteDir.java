@@ -622,6 +622,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 
         if(e.getActionCommand().equals("rm"))
         {
+        	if (!((HImageButton) (e.getSource())).isEnabled()) {
+        		return;
+        	}
+        	
             lock(false);
 
             if(Settings.getAskToDelete())
@@ -638,7 +642,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             {
                 if(dirEntry[i].selected)
                 {
-                    con.removeFileOrDir(dirEntry[i].file);
+                    int ret = con.removeFileOrDir(dirEntry[i].file);
+					if (ret < 0) {
+						deleteButton.setEnabled(false);
+					}
                 }
             }
 
