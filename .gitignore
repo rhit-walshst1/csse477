@@ -1,2 +1,5 @@
 j-ftp/build/
 j-ftp/*-errors.txt
+
+restserver/node_modules
+package-lock.json
