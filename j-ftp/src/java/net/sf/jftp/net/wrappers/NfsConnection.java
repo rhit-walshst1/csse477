@@ -57,6 +57,8 @@ public class NfsConnection implements BasicConnection
     private boolean isDirUpload = false;
     private boolean shortProgress = false;
     private boolean dummy = false;
+    
+    private String searchFilter = "";
 
     public NfsConnection(String url)
     {
@@ -431,6 +433,20 @@ public class NfsConnection implements BasicConnection
         if(files == null)
         {
             return new String[0];
+        }
+        
+        if (!searchFilter.equals(""))
+        {
+        	Vector<String> filteredFiles = new Vector<>();
+        	
+            for (String item : files) {
+           		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
+            		filteredFiles.add(item);
+            	}
+        	}
+            
+            files = new String[filteredFiles.size()];
+            filteredFiles.copyInto(files);
         }
 
         size = new String[files.length];
@@ -934,4 +950,9 @@ public class NfsConnection implements BasicConnection
 
         return false;
     }
+    
+	public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate();	
+	}
 }

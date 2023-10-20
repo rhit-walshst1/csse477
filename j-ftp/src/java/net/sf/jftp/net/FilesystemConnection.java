@@ -44,6 +44,7 @@ public class FilesystemConnection implements BasicConnection
     private int fileCount;
     private boolean shortProgress = false;
     public Vector<Date> dateVector = new Vector<Date>();
+    private String searchFilter = "";
 
     public FilesystemConnection()
     {
@@ -388,7 +389,21 @@ public class FilesystemConnection implements BasicConnection
             //System.out.println(d.toString());
             dateVector.add(d);
         }
-
+        
+        if (!searchFilter.equals(""))
+        {
+        	Vector<String> filteredFiles = new Vector<>();
+        	
+            for (String item : files) {
+           		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
+            		filteredFiles.add(item);
+            	}
+        	}
+            
+            files = new String[filteredFiles.size()];
+            filteredFiles.copyInto(files);
+        }
+        
         return files;
     }
 
@@ -730,4 +745,9 @@ public class FilesystemConnection implements BasicConnection
 
         return f.renameTo(new File(to));
     }
+    
+    public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate();		
+	}
 }

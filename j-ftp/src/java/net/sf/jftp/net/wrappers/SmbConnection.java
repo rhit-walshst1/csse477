@@ -60,6 +60,7 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
     private boolean shortProgress = false;
     private boolean dummy = false;
     private boolean connected = false;
+    private String searchFilter = "";
 
     public SmbConnection()
     {
@@ -422,6 +423,20 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
                 }
             }
 
+            if (!searchFilter.equals(""))
+            {
+            	Vector<String> filteredFiles = new Vector<>();
+            	
+                for (String item : files) {
+               		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
+                		filteredFiles.add(item);
+                	}
+            	}
+                
+                files = new String[filteredFiles.size()];
+                filteredFiles.copyInto(files);
+            }
+            
             //Log.debug("sortLs: finished, ok");
             return files;
         }
@@ -972,4 +987,10 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
             return false;
         }
     }
+
+	@Override
+	public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate();		
+	}
 }

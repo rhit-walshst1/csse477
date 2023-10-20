@@ -53,6 +53,7 @@ public class WebdavConnection implements BasicConnection
     private boolean shortProgress = false;
     private String user;
     private String pass;
+    private String searchFilter = "";
 
     public WebdavConnection(String path, String user, String pass,
                             ConnectionListener l)
@@ -493,6 +494,20 @@ public class WebdavConnection implements BasicConnection
                 size[i] = "" + new WebdavFile(new URL(files[i]), user, pass).length();
                 */
             }
+            
+            if (!searchFilter.equals(""))
+            {
+            	Vector<String> filteredFiles = new Vector<>();
+            	
+                for (String item : files) {
+               		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
+                		filteredFiles.add(item);
+                	}
+            	}
+                
+                files = new String[filteredFiles.size()];
+                filteredFiles.copyInto(files);
+            }
 
             return files;
         }
@@ -932,4 +947,10 @@ public class WebdavConnection implements BasicConnection
 
         return false;
     }
+    
+    public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate();	
+	}
+    
 }

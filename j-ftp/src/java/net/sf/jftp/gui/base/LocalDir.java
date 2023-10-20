@@ -64,6 +64,7 @@ import net.sf.jftp.gui.base.dir.TableUtils;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
 import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.framework.HSearchBar;
 import net.sf.jftp.gui.tasks.Creator;
 import net.sf.jftp.gui.tasks.ImageViewer;
 import net.sf.jftp.gui.tasks.NameChooser;
@@ -72,6 +73,7 @@ import net.sf.jftp.net.BasicConnection;
 import net.sf.jftp.net.ConnectionListener;
 import net.sf.jftp.net.FilesystemConnection;
 import net.sf.jftp.net.FtpConnection;
+import net.sf.jftp.net.wrappers.Sftp2Connection;
 import net.sf.jftp.net.wrappers.SmbConnection;
 import net.sf.jftp.system.LocalIO;
 import net.sf.jftp.system.StringUtils;
@@ -96,6 +98,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
     static final String cpString = "cp";
     static final String rnString = "rn";
     static final String cdUpString = "cdUp";
+    static final String searchString = "srch";
     HImageButton deleteButton;
     HImageButton mkdirButton;
     HImageButton cmdButton;
@@ -105,6 +108,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
     HImageButton zipButton;
     HImageButton cpButton;
     HImageButton rnButton;
+    HSearchBar searchBar;
     private DirCanvas label = new DirCanvas(this);
     private boolean pathChanged = true;
     private boolean firstGui = true;
@@ -227,6 +231,10 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
                                       "Go to Parent Directory", this);
         cdUpButton.setToolTipText("Go to Parent Directory");
+        
+        searchBar = new HSearchBar("Search", this);
+        searchBar.getSearchButton().setActionCommand("sb");
+        searchBar.getSearchButton().addActionListener(this);
 
         label.setText("Filesystem: " + StringUtils.cutPath(path));
         label.setSize(getSize().width - 10, 24);
@@ -251,9 +259,8 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         buttonPanel.add(cdButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(cdUpButton);
-        buttonPanel.add(new JLabel("  "));
-
         buttonPanel.add(zipButton);
+        buttonPanel.add(searchBar);
         buttonPanel.add(new JLabel("              "));
 
         buttonPanel.setVisible(true);
@@ -281,7 +288,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         jl.setCellRenderer(new DirCellRenderer());
         jl.setVisibleRowCount(Settings.visibleFileRows);
 
-        // add this becaus we need to fetch only doubleclicks
+        // add this because we need to fetch only doubleclicks
         MouseListener mouseListener = new MouseAdapter()
         {
             public void mousePressed(MouseEvent e)
@@ -714,6 +721,11 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         else if(e.getActionCommand().equals("fresh"))
         {
             fresh();
+        }
+        else if(e.getActionCommand().equals("sb")) 
+        {   	
+            con.filter(searchBar.getSearchText());
+        	searchBar.setSearchText("");
         }
         else if(e.getActionCommand().equals("cp"))
         {

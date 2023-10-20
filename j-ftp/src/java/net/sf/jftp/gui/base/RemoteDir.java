@@ -629,7 +629,6 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             return;
         }
 
-        // TODO: Make the actionlistener
         if(e.getActionCommand().equals("rm"))
         {
         	if (!((HImageButton) (e.getSource())).isEnabled()) {
@@ -713,9 +712,8 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             blockedTransfer(-2);
         }
         else if(e.getActionCommand().equals("sb")) 
-        {
-        	// Insert the Searching Functions here!
-        	((FtpConnection) con).filter(searchBar.getSearchText());
+        {   	
+            con.filter(searchBar.getSearchText());
         	searchBar.setSearchText("");
         }
         else if(e.getActionCommand().equals("list"))

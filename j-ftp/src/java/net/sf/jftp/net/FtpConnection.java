@@ -629,6 +629,11 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			dateVector = new Vector<Date>();
 			currentFiles.removeAllElements();
 
+			if (!searchFilter.equals(""))
+			{
+				currentListing.removeIf(item -> !item.toLowerCase().contains(searchFilter.toLowerCase()));	
+			}
+			
 			for(int i=0; i<currentListing.size(); i++)
 			{
 				String tmp = (String) currentListing.get(i);
@@ -2318,7 +2323,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void list() throws IOException
 	{
-		String oldType = ""; 		
+		String oldType = ""; 
+		
 		try
 		{
 			//BufferedReader in = jcon.getReader();
@@ -2350,11 +2356,6 @@ public class FtpConnection implements BasicConnection, FtpConstants
 				if(!line.trim().equals("")) { 
 					currentListing.add(line);
 				}
-			}
-			
-			if (!searchFilter.equals(""))
-			{
-				currentListing.removeIf(item -> !item.contains(searchFilter));	
 			}
 			
 			getLine(POSITIVE); //FTP226_CLOSING_DATA_REQUEST_SUCCESSFUL);
@@ -3193,8 +3194,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 	public void filter(String searchText) {
 		searchFilter = searchText;
-		fireDirectoryUpdate(this);		
-		searchFilter = "";
+		fireDirectoryUpdate(this);	
 	}
 
 }

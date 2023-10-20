@@ -67,6 +67,7 @@ public class Sftp2Connection implements BasicConnection
     private String keyfile = null;
     private Session session;
     private ChannelSftp channel;
+    private String searchFilter = "";
 
     public Sftp2Connection(String host, String port, String keyfile)
     {
@@ -411,6 +412,20 @@ public class Sftp2Connection implements BasicConnection
                 files[i] = tmp[i];
             }
 
+            if (!searchFilter.equals(""))
+            {
+            	Vector<String> filteredFiles = new Vector<>();
+            	
+                for (String item : files) {
+               		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
+                		filteredFiles.add(item);
+                	}
+            	}
+                
+                files = new String[filteredFiles.size()];
+                filteredFiles.copyInto(files);
+            }
+            
             return files;
         }
         catch(Exception ex)
@@ -1031,6 +1046,12 @@ public class Sftp2Connection implements BasicConnection
     {
         return null;
     }
+    
+    public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate();		
+	}
+    
 }
 
 class MyUserInfo implements UserInfo {

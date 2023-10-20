@@ -79,5 +79,5 @@ public interface BasicConnection
 
     public boolean rename(String from, String to);
 
-//	public void filter(String searchText);
+	public void filter(String searchText);
 }
