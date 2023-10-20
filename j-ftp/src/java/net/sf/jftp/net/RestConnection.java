@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -128,6 +129,7 @@ public class RestConnection implements BasicConnection {
 
 		if (response != 200) {
 			Log.debug("Failed to connect! Got response code: " + response);
+			return;
 		}
 		
 		for (ConnectionListener listener : listeners) {
@@ -299,6 +301,47 @@ public class RestConnection implements BasicConnection {
 
 	@Override
 	public int download(String file) {
+		StringBuffer out = new StringBuffer();
+
+		int response = sendWebRequest("/download?path=" + file, out);
+		
+		if (response != 200) {
+			Log.debug("Failed to download a file");
+			return -1;
+		}
+		
+		JSONObject obj = new JSONObject(out.toString());
+		
+		JSONArray files = obj.getJSONArray("Files");
+		
+		if (files.length() != 1) {
+			Log.debug("Irregular response from downloading");
+			return -1;
+		}
+		
+		JSONObject fileResponse = files.getJSONObject(0);
+		
+		String[] fileSplit = fileResponse.getString("file").split("/");
+		String fileName = fileSplit[fileSplit.length - 1];
+		String fileContent = fileResponse.getString("content");
+		
+		File newFile = new File(localPath + fileName);
+		
+		try {
+			newFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			FileWriter fileWriter = new FileWriter(localPath + fileName, false);
+			fileWriter.write(fileContent);
+			fileWriter.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return 0;
 	}
 
@@ -308,18 +351,15 @@ public class RestConnection implements BasicConnection {
 	}
 
 	@Override
-	public int upload(String file, InputStream in) {		
+	public int upload(String file, InputStream in) {
 		StringBuilder stringBuilder = new StringBuilder();
-		String ls = System.getProperty("line.separator");
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(localPath + file));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(ls);
+				stringBuilder.append(line.replaceAll("[^a-zA-Z0-9]", " "));
 			}
-			// delete the last new line separator
 			reader.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -327,7 +367,7 @@ public class RestConnection implements BasicConnection {
 			e.printStackTrace();
 		}
 
-		String content = stringBuilder.toString().substring(0, stringBuilder.length() - ls.length());
+		String content = stringBuilder.toString();
 										
 		int response = sendWebRequest("/upload", "POST", "[{\"path\": \"" + pwd.substring(0, pwd.length() - 1) + "\", \"fileName\": \"" + file + "\", \"body\": \"" + content + "\"}]");
 		

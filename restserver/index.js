@@ -218,16 +218,6 @@ app.post("/transfer", (req, res) => {
         });
     }
 
-    const targetServerName = `${req.headers["target-ftp-type"]} ${req.headers["target-ftp-host"]}:${req.headers["target-port"]}`;
-
-    if (!serverExists(targetServerName)) {
-        return res.status(400).json({
-            "Status": "ERROR",
-            "Message": "Target server is not connected",
-            "Code": 400
-        });
-    }
-
     if (req.headers["source-username"] != username || req.headers["source-password"] != password) {
         return res.status(401).json({
             "Status": "ERROR",
@@ -242,6 +232,12 @@ app.post("/transfer", (req, res) => {
             "Message": "Invalid credentials for target server",
             "Code": 401
         });
+    }
+
+    const targetServerName = `${req.headers["target-ftp-type"]} ${req.headers["target-ftp-host"]}:${req.headers["target-port"]}`;
+
+    if (!serverExists(targetServerName)) {
+        serverToFile[targetServerName] = {};
     }
 
     const file = req.body;
