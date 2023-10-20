@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.sql.rowset.Predicate;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -128,6 +129,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	private int fileCount;
 	private String typeNow = "";
 	private String crlf = null;
+	
+	private String searchFilter = "";
 
 	/**
 	 * May contain date listing
@@ -2303,7 +2306,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		getLine(FTP200_OK);
 
 		return getActivePort();
-	}
+	}	
+	
 
 	/**
 	 * List remote directory.
@@ -2314,8 +2318,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void list() throws IOException
 	{
-		String oldType = ""; 
-
+		String oldType = ""; 		
 		try
 		{
 			//BufferedReader in = jcon.getReader();
@@ -2348,7 +2351,12 @@ public class FtpConnection implements BasicConnection, FtpConstants
 					currentListing.add(line);
 				}
 			}
-
+			
+			if (!searchFilter.equals(""))
+			{
+				currentListing.removeIf(item -> !item.contains(searchFilter));	
+			}
+			
 			getLine(POSITIVE); //FTP226_CLOSING_DATA_REQUEST_SUCCESSFUL);
 			input.close();
 
@@ -3181,6 +3189,12 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 	public OutputStream getCommandOutputStream() {
 		return jcon.getOut();
+	}
+
+	public void filter(String searchText) {
+		searchFilter = searchText;
+		fireDirectoryUpdate(this);		
+		searchFilter = "";
 	}
 
 }

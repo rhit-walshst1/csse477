@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionListener;
@@ -58,6 +59,7 @@ import net.sf.jftp.gui.base.dir.TableUtils;
 import net.sf.jftp.gui.framework.HFrame;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
+import net.sf.jftp.gui.framework.HSearchBar;
 import net.sf.jftp.gui.tasks.Creator;
 import net.sf.jftp.gui.tasks.Displayer;
 import net.sf.jftp.gui.tasks.PathChanger;
@@ -91,6 +93,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     static final String queueString = "que";
     static final String cdUpString = "cdUp";
     static final String rnString = "rn";
+    static final String searchString = "srch";
     HImageButton deleteButton;
     HImageButton mkdirButton;
     HImageButton cmdButton;
@@ -101,6 +104,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     HImageButton queueButton;
     HImageButton cdUpButton;
     HImageButton rnButton;
+    HSearchBar searchBar;
 
     //static final String openString = "open";
     private DirCanvas label = new DirCanvas(this);
@@ -233,6 +237,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
                                       "Go to Parent Directory", this);
         cdUpButton.setToolTipText("Go to Parent Directory"); 
+        
+        searchBar = new HSearchBar("Search", this);
+        searchBar.getSearchButton().setActionCommand("sb");
+        searchBar.getSearchButton().addActionListener(this);
 
         //openButton = new HImageButton(Settings.openImage,openString,"Connect to server",this);
         //openButton.setToolTipText("Connect");   
@@ -259,6 +267,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         buttonPanel.add(cdButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(cdUpButton);
+        buttonPanel.add(searchBar);
         buttonPanel.add(new JLabel("  "));
 
         buttonPanel.add(cmdButton);
@@ -294,7 +303,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         jl.setDragEnabled(true);
         jl.setDropTarget(JFtp.statusP.jftp.dropTarget);
 
-        // add this becaus we need to fetch only doubleclicks
+        // add this because we need to fetch only doubleclicks
         MouseListener mouseListener = new MouseAdapter()
         {
             public void mousePressed(MouseEvent e)
@@ -620,6 +629,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             return;
         }
 
+        // TODO: Make the actionlistener
         if(e.getActionCommand().equals("rm"))
         {
         	if (!((HImageButton) (e.getSource())).isEnabled()) {
@@ -701,6 +711,12 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         else if(e.getActionCommand().equals("<-"))
         {
             blockedTransfer(-2);
+        }
+        else if(e.getActionCommand().equals("sb")) 
+        {
+        	// Insert the Searching Functions here!
+        	((FtpConnection) con).filter(searchBar.getSearchText());
+        	searchBar.setSearchText("");
         }
         else if(e.getActionCommand().equals("list"))
         {

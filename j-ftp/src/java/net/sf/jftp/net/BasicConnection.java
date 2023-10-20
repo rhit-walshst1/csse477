@@ -78,4 +78,6 @@ public interface BasicConnection
     public void setConnectionListeners(Vector<ConnectionListener> listeners);
 
     public boolean rename(String from, String to);
+
+//	public void filter(String searchText);
 }
