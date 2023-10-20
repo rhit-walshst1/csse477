@@ -27,11 +27,13 @@ import java.util.Properties;
 public class Settings
 {
     private static Properties p = new Properties();
+    private static Properties config = new Properties();
     public static final String propertyFilename = System.getProperty("user.home") +
                                                   File.separator +
                                                   ".jftp/jftp.properties".replace('/',
                                                                                   File.separatorChar);
-
+    public static final String configFilename = new File("").getAbsolutePath() + 
+    											"\\src\\java\\net\\sf\\jftp\\config\\config.settings";
     public static boolean IS_JAVA_1_6 = true;
     
 
@@ -46,10 +48,7 @@ public class Settings
     public static int maxConnections = 3;
     public static boolean enableResuming = false; // overridden by JFtp
     public static boolean enableUploadResuming = false;
-    public static boolean noUploadResumingQuestion = true;
-    public static boolean askToResume = true;
     public static boolean reconnect = true;
-    public static int uiRefresh = 500;
     public static int logFlushInterval = 2000; // obsolete
     public static boolean useLogFlusher = false; // obsolete
     public static int ftpTransferThreadPause = 2000;
@@ -79,9 +78,6 @@ public class Settings
     public static boolean showDateNoSize = false;
     public static boolean showLocalDateNoSize = false;
 
-    // hides some messages like MODE, Type etc.
-    public static boolean hideStatus = false;
-
     public static boolean showNewlineOption = false;
 
     // for DataConnection - lower means less buffer, more updates in the downloadmanager
@@ -94,28 +90,19 @@ public class Settings
     // enables some delays 
     public static boolean enableFtpDelays = false;
 
-    // title of the app
-    public static final String title = "JFtp - The Java Network Browser";
-
     // overridden title for insomniac client
     public static final String insomniacTitle = ">>> Insomniac client BETA 1 <<< Based on JFtp ";
 
     // override ui with the insomniac client configuration
     public static boolean isInsomniacClient = false;
-    public static int refreshDelay = 250;
     public static boolean useDefaultDir = true;
 
-    // may the windows be resized?
-    public static boolean resize = true;
-    public static boolean showFileSize = true;
     public static boolean sortDir = true;
-    public static final int visibleFileRows = 15;
     public static int scrollSpeed = 9;
     public static int numFiles = 9;
     public static final int connectionTimeout = 30000;
     public static final int testTimeout = 5000;
     public static int statusMessageAfterMillis = 1000;
-    public static final String defaultDir = "<default>";
     public static final String defaultWorkDir = System.getProperty("user.home");
     public static final String userHomeDir = System.getProperty("user.home");
     public static final String appHomeDir = userHomeDir +
@@ -581,8 +568,116 @@ public class Settings
         }
     }
     
+    public static String getGUITitle()
+    {
+    	String what = config.getProperty("title",
+    							"JFtp - Java Network Browser");
+    	return what.trim();
+    }
+    
+    public static boolean getNoUploadResumingQuestion()
+    {
+    	String what = config.getProperty("noUploadResumingQuestion", "true");
+
+        if(what.trim().equals("false"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public static boolean getAskToResume()
+    {
+    	String what = config.getProperty("askToResume", "true");
+
+        if(what.trim().equals("false"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public static int getUIRefresh()
+    {
+    	String what = config.getProperty("uiRefresh", "500");
+    	Integer uiRefresh = Integer.parseInt(what.trim());
+    	
+    	return uiRefresh;
+    }
+    
+    public static String getDefaultDir()
+    {
+    	String what = config.getProperty("defaultDir", "<default>");
+    	return what.trim();
+    }
+    
+    public static int getRefreshDelay()
+    {
+    	String what = config.getProperty("refreshDelay", "250");
+    	Integer refreshDelay = Integer.parseInt(what.trim());
+    	
+    	return refreshDelay;
+    }
+    
+    public static boolean getResize() // may the windows be resized?
+    {
+    	String what = config.getProperty("resize", "true");
+    	
+    	if(what.trim().equals("false"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public static boolean getShowFileSize()
+    {
+    	String what = config.getProperty("showFileSize", "true");
+    	
+    	if(what.trim().equals("false"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public static boolean getHideStatus() // hides some messages like MODE, Type etc.
+    {
+    	String what = config.getProperty("hideStatus", "false");
+    	
+    	if(what.trim().equals("false"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+    public static int getVisibleFileRows()
+    {
+    	String what = config.getProperty("visibleFileRows", "15");
+    	Integer visibleFileRows = Integer.parseInt(what.trim());
+    	
+    	return visibleFileRows;
+    }
+    
     static
     {
+    	
         try
         {
             p.load(new FileInputStream(propertyFilename));
@@ -591,6 +686,15 @@ public class Settings
         {
             System.out.println("no property file loaded, using defaults... (" +
                                e + ")");
+        }
+        
+        try
+        {
+        	config.load(new FileInputStream(configFilename));
+        }
+        catch(Exception e) {
+        	System.out.println("No config.settings file loaded, using defaults... (" +
+        						e + ")");
         }
         
         if(!getUseNewIcons()) {

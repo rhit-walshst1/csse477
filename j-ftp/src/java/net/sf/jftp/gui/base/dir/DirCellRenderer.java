@@ -76,7 +76,7 @@ public class DirCellRenderer extends DefaultListCellRenderer
         {
             String size = "";
 
-            if(Settings.showFileSize)
+            if(Settings.getShowFileSize())
             {
                 size = ((DirEntry) list.getModel().getElementAt(index)).getFileSize();
             }

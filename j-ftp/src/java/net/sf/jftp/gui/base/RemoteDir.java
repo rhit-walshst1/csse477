@@ -299,7 +299,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         jlm = new DefaultListModel();
         jl = new JList(jlm);
         jl.setCellRenderer(new DirCellRenderer());
-        jl.setVisibleRowCount(Settings.visibleFileRows);
+        jl.setVisibleRowCount(Settings.getVisibleFileRows());
         jl.setDragEnabled(true);
         jl.setDropTarget(JFtp.statusP.jftp.dropTarget);
 
@@ -1404,7 +1404,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     {
         File f = new File(JFtp.localDir.getPath() + dirEntry.file);
 
-        if(f.exists() && Settings.enableResuming && Settings.askToResume)
+        if(f.exists() && Settings.enableResuming && Settings.getAskToResume())
         {
             ResumeDialog r = new ResumeDialog(dirEntry); // ResumeDialog handels the rest
 

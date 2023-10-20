@@ -123,7 +123,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JCheckBoxMenuItem resuming = new JCheckBoxMenuItem("Enable Resuming",
                                                        Settings.enableResuming);
     JCheckBoxMenuItem ask = new JCheckBoxMenuItem("Always Ask to Resume",
-                                                  Settings.askToResume);
+                                                  Settings.getAskToResume());
     JMenuItem proxy = new JMenuItem("Proxy Settings...");
     JCheckBoxMenuItem smbThreads = new JCheckBoxMenuItem("Multiple Connections",
                                                          Settings.getEnableSmbMultiThreading());
@@ -854,7 +854,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        }
 	        else if(e.getSource() == ask)
 	        {
-	            Settings.askToResume = ask.getState();
+	            Settings.setProperty("askToResume", ask.getState());
 	        }
 	        else if(e.getSource() == http)
 	        {

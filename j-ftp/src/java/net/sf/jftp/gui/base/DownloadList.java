@@ -547,7 +547,7 @@ public class DownloadList extends HPanel implements ActionListener
     {
         long time = System.currentTimeMillis();
 
-        if((time - oldtime) < Settings.refreshDelay)
+        if((time - oldtime) < Settings.getRefreshDelay())
         {
             return false;
         }

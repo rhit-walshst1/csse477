@@ -592,7 +592,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
     		Settings.enableResuming = true;
     		Settings.enableUploadResuming = true;
-    		Settings.noUploadResumingQuestion = false;
+    		Settings.setProperty("noUploadResumingQuestion", "false");
 
     		setSocksProxyOptions(Settings.getSocksProxyHost(),
     				Settings.getSocksProxyPort());
@@ -735,9 +735,9 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 		mainFrame = new JFrame();
 		mainFrame.setLocation(Settings.getWindowLocation());
 
-		mainFrame.setTitle(Settings.title + " - Version " + getVersion());
+		mainFrame.setTitle(Settings.getGUITitle() + " - Version " + getVersion());
 
-		mainFrame.setResizable(Settings.resize);
+		mainFrame.setResizable(Settings.getResize());
 		mainFrame.addWindowListener(this);
 
 		Image icon = HImage.getImage(this, Settings.iconImage);
@@ -763,7 +763,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
             if((msg.indexOf("NOOP") > 0) || (msg.indexOf("Type") > 0) ||
                    (msg.indexOf("MODE") > 0) || (msg.indexOf("Passive") > 0))
             {
-                if(Settings.hideStatus)
+                if(Settings.getHideStatus())
                 {
                     return;
                 }
@@ -784,7 +784,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         long time = System.currentTimeMillis();
 
-        if(((time - oldtime) < Settings.uiRefresh))
+        if(((time - oldtime) < Settings.getUIRefresh()))
         {
             UpdateDaemon.updateLog();
 

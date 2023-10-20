@@ -95,7 +95,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	private boolean msg = true;
 	private boolean ok = true;
 	private String pwd = "";
-	private String initCWD = Settings.defaultDir;
+	private String initCWD = Settings.getDefaultDir();
 	private String[] loginAck = new String[] { FTP331_USER_OK_NEED_PASSWORD, FTP230_LOGGED_IN };
 	private String osType = "";
 	private String dataType;
@@ -287,7 +287,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			//if(getOsType().indexOf("MVS") < 0) 
 			binary();
 
-			if(initCWD.trim().equals(Settings.defaultDir) ||
+			if(initCWD.trim().equals(Settings.getDefaultDir()) ||
 					!chdirNoRefresh(initCWD))
 			{
 				//System.out.println("default dir...");
@@ -1719,7 +1719,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 					}
 					else if(f.exists() && Integer.parseInt(size) > 0)
 					{
-						if(!Settings.noUploadResumingQuestion) {
+						if(!Settings.getNoUploadResumingQuestion()) {
 							if(JOptionPane.showConfirmDialog(new JLabel(), "A file smaller than the one to be uploaded already exists on the server,\n do you want to resume the upload?", "Resume upload?", JOptionPane.YES_NO_OPTION)
 									!= JOptionPane.OK_OPTION) {
 								resume = false;

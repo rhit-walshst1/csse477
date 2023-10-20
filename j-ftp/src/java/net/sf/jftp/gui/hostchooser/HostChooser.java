@@ -68,7 +68,7 @@ public class HostChooser extends HFrame implements ActionListener,
     public HPasswordField pass = new HPasswordField("Password:",
                                                     "none@nowhere.no");
     public HTextField port = new HTextField("Port:    ", "21");
-    public HTextField cwd = new HTextField("Remote:  ", Settings.defaultDir);
+    public HTextField cwd = new HTextField("Remote:  ", Settings.getDefaultDir());
     public HTextField lcwd = new HTextField("Local:   ", Settings.defaultWorkDir);
     public HTextField dl = new HTextField("Max. connections:    ", "3");
     public HTextField crlf = new HTextField("Override server newline:    ", "<default>");
@@ -331,7 +331,7 @@ public class HostChooser extends HFrame implements ActionListener,
 
             if(dirBox.isSelected())
             {
-                dtmp = Settings.defaultDir;
+                dtmp = Settings.getDefaultDir();
                 ltmp = Settings.defaultWorkDir;
             }
             else

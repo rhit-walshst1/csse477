@@ -40,7 +40,7 @@ public class FtpURLConnection extends URLConnection
         super(u);
 
         int port = u.getPort() > 0 ? u.getPort() : 21;
-        connection = new FtpConnection(u.getHost(), port, Settings.defaultDir);
+        connection = new FtpConnection(u.getHost(), port, Settings.getDefaultDir());
 
         String userInfo = u.getUserInfo();
 
