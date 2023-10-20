@@ -22,6 +22,7 @@ import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.tasks.LastConnections;
 import net.sf.jftp.net.ConnectionListener;
 import net.sf.jftp.net.FtpConnection;
+import net.sf.jftp.net.RestConnection;
 import net.sf.jftp.system.logging.Log;
 
 
@@ -220,6 +221,15 @@ public class StartConnection
 
         //return true only if all has executed as expected
         return true;
+    }
+    
+    public static int startRestCon(String host, String user, String pass, int port, String type) {
+    	RestConnection con = new RestConnection(host, user, pass, port, type);
+    	
+    	JFtp.statusP.jftp.addConnection(host, con);
+    	
+    	con.connect();
+    	return 0;
     }
 
     public static int startFtpCon(String htmp, String utmp, String ptmp,

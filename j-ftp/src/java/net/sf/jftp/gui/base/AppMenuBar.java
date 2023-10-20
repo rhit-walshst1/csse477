@@ -20,6 +20,7 @@ import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.gui.hostchooser.HostChooser;
 import net.sf.jftp.gui.hostchooser.NfsHostChooser;
+import net.sf.jftp.gui.hostchooser.RestHostChooser;
 import net.sf.jftp.gui.hostchooser.ScpHostChooser;
 import net.sf.jftp.gui.hostchooser.SftpHostChooser;
 import net.sf.jftp.gui.hostchooser.SmbHostChooser;
@@ -90,6 +91,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JMenuItem localWebdavCon = new JMenuItem("Open WebDAV Connection in Local Tab... (ALPHA)");
     JMenuItem closeLocalCon = new JMenuItem("Close Active Connection in Local Tab");
     JMenuItem secureCon = new JMenuItem("Use SCP...");
+    JMenuItem restCon = new JMenuItem("Connect with REST...");
     JMenuItem ftpCon = new JMenuItem("Connect to FTP Server...");
     JMenuItem sftpCon = new JMenuItem("Connect to SFTP Server...");
     JMenuItem smbCon = new JMenuItem("Connect to SMB Server / Browse LAN...");
@@ -165,6 +167,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         this.jftp = jftp;
         
         secureCon.addActionListener(this);
+        restCon.addActionListener(this);
         ftpCon.addActionListener(this);
         close.addActionListener(this);
         exit.addActionListener(this);
@@ -446,6 +449,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         file.removeAll();
 
         file.add(secureCon);
+        file.add(restCon);
         file.add(ftpCon);
         file.add(sftpCon);
         file.add(smbCon);
@@ -710,6 +714,13 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	
 	            //hc.setModal(true);
 	            hc.update();
+	        }
+	        else if ((e.getSource() == restCon) && (!jftp.uiBlocked))
+	        {
+	        	RestHostChooser hc = new RestHostChooser();
+	        	hc.toFront();
+	        	
+	        	hc.update();
 	        }
 	        else if((e.getSource() == smbCon) && (!jftp.uiBlocked))
 	        {

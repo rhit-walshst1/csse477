@@ -92,7 +92,10 @@ app.post("/upload", (req, res) => {
     const files = req.body;
 
     for (const file of files) {
-        serverToFile[headersToServerName(req.headers)][`${file.path}/${file.fileName}`] = file.body;
+        serverToFile[headersToServerName(req.headers)][`${file.path}/${file.fileName}`] = {
+            "content": file.body,
+            "date": new Date().toISOString()
+        };
     }
 
     console.log(serverToFile)
@@ -145,14 +148,25 @@ app.get("/download", (req, res) => {
         });
     }
 
+    const files = [];
     if (req.query["path"]) {
-        var files = [{"file": req.query["path"], "content": serverToFile[headersToServerName(req.headers)][req.query["path"]]}]
-    } else {
-        var files = [];
         for (const key in serverToFile[headersToServerName(req.headers)]) {
+            if (key.startsWith(req.query["path"])) {
+                const file = serverToFile[headersToServerName(req.headers)][key];
+                files.push({
+                    "file": key,
+                    "content": file.content,
+                    "date": file.date
+                })
+            }
+        }
+    } else {
+        for (const key in serverToFile[headersToServerName(req.headers)]) {
+            const file = serverToFile[headersToServerName(req.headers)][key];
             files.push({
                 "file": key,
-                "content": serverToFile[headersToServerName(req.headers)][key]
+                "content": file.content,
+                "date": file.date
             });
         }
     }
@@ -163,7 +177,7 @@ app.get("/download", (req, res) => {
         "Status": "SUCCESS",
         "Message": "Files downloaded successfully",
         "Code": 200,
-        "Files": files || []
+        "Files": files
     });
 });
 
