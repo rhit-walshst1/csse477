@@ -30,6 +30,7 @@ public class RestConnection implements BasicConnection {
 	private Vector<ConnectionListener> listeners = new Vector<ConnectionListener>();
 	private String localPath = "/";
 	private String pwd = "/";
+	private String filterText = "";
 	
 	class RemoteFile {
 		String name;
@@ -181,6 +182,11 @@ public class RestConnection implements BasicConnection {
 				
 		for (int i = 0; i < files.length(); i++) {
 			JSONObject file = files.getJSONObject(i);
+			
+			if (!filterText.isEmpty() && !file.getString("file").contains(filterText)) {
+				continue;
+			}
+			
 			this.files.add(new RemoteFile(file.getString("file"), file.getString("content"), file.getString("date"), FtpConstants.W));
 		}
 		
@@ -412,8 +418,11 @@ public class RestConnection implements BasicConnection {
 
 	@Override
 	public void filter(String searchText) {
-		// TODO Finish this unimplemented method
-		
+		filterText = searchText;
+		for (ConnectionListener listener : this.listeners) {
+			listener.updateRemoteDirectory(this);
+		}
+		filterText = "";
 	}
 
 }
