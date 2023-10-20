@@ -1,0 +1,10 @@
+	noUploadResumingQuestion = true
+	askToResume = true
+	uiRefresh = 500
+	title = JFtp - The Java Network Browser
+	defaultDir = <default>
+	refreshDelay = 250;
+	resize = true
+	showFileSize = true
+	hideStatus = false
+	visibleFileRows = 15

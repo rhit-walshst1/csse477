@@ -29,7 +29,7 @@ public class HFrame extends JDialog
 		setFont(GUIDefaults.font);
 		setTitle("JFtp...");
 		setBackground(new JLabel().getBackground());
-		setResizable(Settings.resize);
+		setResizable(Settings.getResize());
 
 		//setModal(true);
 		fixLocation();

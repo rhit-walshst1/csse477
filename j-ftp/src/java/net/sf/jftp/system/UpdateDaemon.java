@@ -120,7 +120,7 @@ public class UpdateDaemon implements Runnable
                     Thread.sleep(500);
                 }
 
-                Thread.sleep(Settings.uiRefresh);
+                Thread.sleep(Settings.getUIRefresh());
             }
             catch(Exception ex)
             {

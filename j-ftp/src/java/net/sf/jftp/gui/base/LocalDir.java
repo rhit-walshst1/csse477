@@ -286,7 +286,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         jlm = new DefaultListModel();
         jl = new JList(jlm);
         jl.setCellRenderer(new DirCellRenderer());
-        jl.setVisibleRowCount(Settings.visibleFileRows);
+        jl.setVisibleRowCount(Settings.getVisibleFileRows());
 
         // add this because we need to fetch only doubleclicks
         MouseListener mouseListener = new MouseAdapter()
