@@ -30,7 +30,6 @@ public class RestConnection implements BasicConnection {
 	private Vector<ConnectionListener> listeners = new Vector<ConnectionListener>();
 	private String localPath = "/";
 	private String pwd = "/";
-	private String searchFilter = "";
 	
 	class RemoteFile {
 		String name;
@@ -239,20 +238,6 @@ public class RestConnection implements BasicConnection {
 			sortedList[i] = this.files.get(i).name;
 		}
 		
-		if (!searchFilter.equals(""))
-        {
-        	Vector<String> filteredFiles = new Vector<>();
-        	
-            for (String item : sortedList) {
-           		if (item.toLowerCase().contains(searchFilter.toLowerCase())) {
-            		filteredFiles.add(item);
-            	}
-        	}
-            
-            sortedList = new String[filteredFiles.size()];
-            filteredFiles.copyInto(sortedList);
-        }
-		
 		return sortedList;
 	}
 
@@ -425,8 +410,10 @@ public class RestConnection implements BasicConnection {
 		return false;
 	}
 
+	@Override
 	public void filter(String searchText) {
-		// TODO: Unimplemented method 
+		// TODO Finish this unimplemented method
+		
 	}
 
 }
