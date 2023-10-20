@@ -1,0 +1,50 @@
+package net.sf.jftp.gui.framework;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class HSearchBar extends JPanel {
+    private JLabel label;
+    private JTextField searchField;
+    private JButton searchButton;
+
+    public HSearchBar(String labelText) {
+        setLayout(new BorderLayout(5, 5));
+
+        searchField = new JTextField("Search"); // Set the desired width
+        add("Center", searchField);
+
+        searchButton = new JButton("Search");
+        add("East", searchButton);
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String searchText = searchField.getText();
+                // Add your search action logic here
+                System.out.println("Searching for: " + searchText);
+            }
+        });
+
+        setVisible(true);
+        
+        setPreferredSize(new Dimension(100, 25));
+    }
+
+    public String getLabel() {
+        return label.getText();
+    }
+
+    public void setLabel(String labelText) {
+        label.setText(labelText + "  ");
+    }
+
+    public String getSearchText() {
+        return searchField.getText();
+    }
+
+    public void setSearchText(String searchText) {
+        searchField.setText(searchText);
+    }
+}

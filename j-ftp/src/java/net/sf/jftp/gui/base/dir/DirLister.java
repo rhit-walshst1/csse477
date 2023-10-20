@@ -105,7 +105,9 @@ public class DirLister implements ActionListener
             String outfile = Settings.ls_out;
             
             //BasicConnection con = JFtp.getControlConnection();
+            // TODO: Make con.list() filter OR
             con.list();
+            // TODO: Make sortLs, sortSize & getPermissions filter the same way
             files = con.sortLs();
             sizes = con.sortSize();
             

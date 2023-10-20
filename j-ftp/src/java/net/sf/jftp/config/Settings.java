@@ -220,6 +220,8 @@ public class Settings
     
     
     public static String hiddenPassword = "<%hidden%>";
+	
+    public static String searchImage = "images/current/search.png";
 
     public static Object setProperty(String key, String value)
     {
