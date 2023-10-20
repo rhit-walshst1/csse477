@@ -1,3 +1,15 @@
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
 j-ftp/build/
 j-ftp/*-errors.txt
 
