@@ -343,14 +343,21 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         flusher = new LogFlusher();
         daemon = new UpdateDaemon(this);
-        
+        handleLevelUpdate();
+    }
+    
+    private static void handleLevelUpdate() {
+    	if (userLevel >= UserLogin.ADMIN || remoteDir.getCon() instanceof FilesystemConnection) {
+    		((LocalDir) localDir).enableBasicButtons();
+    	} else {
+    		((LocalDir) localDir).disableNonAdminButtons();
+    	}
     }
     
     public static void setUserLevel(int newLevel) {
     	userLevel = newLevel;
-    	if (newLevel >= UserLogin.ADMIN) {
-        	((LocalDir) localDir).enableAdminButtons();
-    	}
+    	
+    	handleLevelUpdate();
     }
     
     public void addRSS() {
@@ -1056,6 +1063,8 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         remoteDir = (Dir) remoteConnectionPanel.getSelectedComponent();
         localDir = (Dir) localConnectionPanel.getSelectedComponent();
         remoteDir.getCon().setLocalPath(localDir.getPath());
+        
+    	handleLevelUpdate();
 
         //localDir.getCon().setLocalPath(remoteDir.getPath());
     }

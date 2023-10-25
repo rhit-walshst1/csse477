@@ -408,11 +408,11 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         setVisible(true);
     }
     
-    private void disableNonAdminButtons() {
+    public void disableNonAdminButtons() {
     	uploadButton.setEnabled(false);
     }
     
-    public void enableAdminButtons() {
+    public void enableBasicButtons() {
     	uploadButton.setEnabled(true);
     }
 
