@@ -64,6 +64,7 @@ import net.sf.jftp.gui.tasks.Creator;
 import net.sf.jftp.gui.tasks.Displayer;
 import net.sf.jftp.gui.tasks.PathChanger;
 import net.sf.jftp.gui.tasks.RemoteCommand;
+import net.sf.jftp.gui.tasks.UserLogin;
 import net.sf.jftp.net.BasicConnection;
 import net.sf.jftp.net.ConnectionListener;
 import net.sf.jftp.net.FilesystemConnection;
@@ -423,6 +424,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         	buttonPanel.remove(sorter);
         }
         
+        if (JFtp.userLevel < UserLogin.ADMIN) {
+        	disableNonAdminButtons();
+        }
+        
         setVisible(true);
     }
 
@@ -435,6 +440,12 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     
     public void setViewPort()
     {
+    }
+    
+    private void disableNonAdminButtons() {
+    	deleteButton.setEnabled(false);
+    	mkdirButton.setEnabled(false);
+    	rnButton.setEnabled(false);
     }
 
     private void setLabel()
@@ -663,6 +674,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("mkdir"))
         {
+        	if (!((HImageButton) (e.getSource())).isEnabled()) {
+        		return;
+        	}
+        	
             Creator c = new Creator("Create:", con);
 
             //TODO: do we need this on events? UpdateDaemon.updateRemoteDirGUI();
@@ -854,6 +869,9 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("rn"))
         {
+        	if (!((HImageButton) (e.getSource())).isEnabled()) {
+        		return;
+        	}
             Object[] target = jl.getSelectedValues();
 
             if((target == null) || (target.length == 0))

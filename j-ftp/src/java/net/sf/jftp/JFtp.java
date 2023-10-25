@@ -86,6 +86,7 @@ import net.sf.jftp.gui.framework.HImageButton;
 import net.sf.jftp.gui.hostchooser.HostChooser;
 import net.sf.jftp.gui.hostchooser.SftpHostChooser;
 import net.sf.jftp.gui.tasks.HostInfo;
+import net.sf.jftp.gui.tasks.UserLogin;
 import net.sf.jftp.net.BasicConnection;
 import net.sf.jftp.net.ConnectionHandler;
 import net.sf.jftp.net.ConnectionListener;
@@ -112,6 +113,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     public static DownloadQueue dQueue = new DownloadQueue();
     public static boolean uiBlocked = false;
     public static HostInfo hostinfo = new HostInfo();
+    public UserLogin userLogin;
 
     //public static BasicConnection controlConnection = null;
     private static ConnectionHandler defaultConnectionHandler = new ConnectionHandler();
@@ -146,6 +148,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     private JInternalFrame j4;
     private JInternalFrame j5;
     private static Hashtable<String, JInternalFrame> internalFrames = new Hashtable<String,JInternalFrame>();
+	public static int userLevel;
     public HostChooser hc;
     private String buffer = "";
     private long oldtime = 0;
@@ -341,6 +344,13 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         flusher = new LogFlusher();
         daemon = new UpdateDaemon(this);
         
+    }
+    
+    public static void setUserLevel(int newLevel) {
+    	userLevel = newLevel;
+    	if (newLevel >= UserLogin.ADMIN) {
+        	((LocalDir) localDir).enableAdminButtons();
+    	}
     }
     
     public void addRSS() {
@@ -753,7 +763,8 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 		mainFrame.pack();
 		mainFrame.validate();
 		mainFrame.setVisible(true);
-		JOptionPane.showMessageDialog(mainFrame, "Welcome to jFTP!");
+		userLogin = new UserLogin();
+		userLogin.update();
 	}
     
     private void log(String msg)

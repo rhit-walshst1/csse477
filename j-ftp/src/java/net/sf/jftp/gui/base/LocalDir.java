@@ -69,6 +69,7 @@ import net.sf.jftp.gui.tasks.Creator;
 import net.sf.jftp.gui.tasks.ImageViewer;
 import net.sf.jftp.gui.tasks.NameChooser;
 import net.sf.jftp.gui.tasks.RemoteCommand;
+import net.sf.jftp.gui.tasks.UserLogin;
 import net.sf.jftp.net.BasicConnection;
 import net.sf.jftp.net.ConnectionListener;
 import net.sf.jftp.net.FilesystemConnection;
@@ -400,7 +401,19 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         	buttonPanel.remove(sorter);
         }
         
+        if (JFtp.userLevel < UserLogin.ADMIN) {
+        	disableNonAdminButtons();
+        }
+        
         setVisible(true);
+    }
+    
+    private void disableNonAdminButtons() {
+    	uploadButton.setEnabled(false);
+    }
+    
+    public void enableAdminButtons() {
+    	uploadButton.setEnabled(true);
     }
 
     public void doChdir(String path) {
@@ -791,6 +804,9 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("->"))
         {
+        	if (!((HImageButton) (e.getSource())).isEnabled()) {
+        		return;
+        	}
             blockedTransfer(-2);
         }
         else if(e.getActionCommand().equals("<-"))
