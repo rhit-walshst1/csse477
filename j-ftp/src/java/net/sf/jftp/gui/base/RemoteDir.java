@@ -443,6 +443,9 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     }
     
     private void disableNonAdminButtons() {
+    	if (getCon() instanceof FilesystemConnection) {
+    		return;
+    	}
     	deleteButton.setEnabled(false);
     	mkdirButton.setEnabled(false);
     	rnButton.setEnabled(false);
