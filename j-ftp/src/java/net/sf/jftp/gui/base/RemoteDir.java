@@ -424,10 +424,6 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         	buttonPanel.remove(sorter);
         }
         
-        if (JFtp.userLevel < UserLogin.ADMIN) {
-        	disableNonAdminButtons();
-        }
-        
         setVisible(true);
     }
 
@@ -477,6 +473,10 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     */
     public void gui(boolean fakeInit)
     {
+        if (JFtp.userLevel < UserLogin.ADMIN) {
+        	disableNonAdminButtons();
+        }
+        
         if(firstGui)
         {
             gui_init();
